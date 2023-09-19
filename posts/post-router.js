@@ -4,7 +4,17 @@ const express = require("express");
 const db = require("../data/db-config.js");
 
 const router = express.Router();
-// db helper
+
+// db helper start
+const Posts = {
+  getAll() {},
+  getById(id) {},
+  create(post) {},
+  update(id, post) {},
+  delete(id) {},
+};
+// db helper end
+
 router.get("/", (req, res) => {});
 
 router.get("/:id", (req, res) => {});
