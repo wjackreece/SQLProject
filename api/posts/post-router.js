@@ -1,66 +1,39 @@
-const express = require('express')
-const Post = require('./post-model')
+const express = require("express");
 
-const router = express.Router()
+// database access using knex
+const db = require("../../data/db-config.js");
 
-function checkId(req, res, next) {
-  next()
-}
+const router = express.Router();
 
-function checkPayload(req, res, next) {
-  next()
-}
+// db helper start
+const Posts = {
+  getAll() {
+    return db.select("id", "title", "contents").from("posts");
+  },
+  getById(id) {},
+  create(post) {},
+  update(id, post) {},
+  delete(id) {},
+};
+// db helper end
 
-router.get('/', async (req, res, next) => {
-  try {
-    const data = await Post.get()
-    res.json(data)
-  } catch (err) {
-    next(err)
-  }
-})
+router.get("/", (req, res) => {
+  Posts.getAll()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((error) => {
+      // res.json({ message: "opps something went wrong" }); // production
+      res.json({ error: error.message }); // development
+    });
+});
 
-router.get('/:id', checkId, async (req, res, next) => {
-  try {
-    const data = await Post.getById(req.params.id)
-    res.json(data)
-  } catch (err) {
-    next(err)
-  }
-})
+router.get("/:id", (req, res) => {});
 
-router.post('/', checkPayload, async (req, res, next) => {
-  try {
-    const data = await Post.create(req.body)
-    res.json(data)
-  } catch (err) {
-    next(err)
-  }
-})
+router.post("/", (req, res) => {});
 
-router.put('/:id', checkPayload, checkId, async (req, res, next) => {
-  try {
-    const data = await Post.update(req.params.id, req.body)
-    res.json(data)
-  } catch (err) {
-    next(err)
-  }
-})
+router.put("/:id", (req, res) => {});
 
-router.delete('/:id', checkId, async (req, res, next) => {
-  try {
-    const data = await Post.remove(req.params.id)
-    res.json(data)
-  } catch (err) {
-    next(err)
-  }
-})
+router.delete("/:id", (req, res) => {});
 
-router.use((err, req, res, next) => { // eslint-disable-line
-  res.status(err.status || 500).json({
-    message: err.message,
-    stack: err.stack,
-  })
-})
-
-module.exports = router
+module.exports = router;
